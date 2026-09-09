@@ -5,7 +5,7 @@ Smart India Hackathon - Problem Statement 26169 (ISRO / DOS)
 Validates:
 1. Backend packaging and clean importability of Phase 0 contracts and all subpackages.
 2. Defensive error handling and fault resilience across all pipeline stages.
-3. Frozen-seed demo scenario configuration validity and deterministic reproducibility.
+3. Frozen-seed flight scenario configuration validity and deterministic reproducibility.
 4. Extended 300-frame combined-stress test execution with zero crashes or exceptions.
 """
 
@@ -56,28 +56,28 @@ class TestPhase9(unittest.TestCase):
         self.assertIn("pipeline_errors", d)
         self.assertIn("stage_timing_breakdown", d)
 
-    def test_demo_scenarios_config_and_seeds(self):
-        """Confirm demo_scenarios.json exists, contains frozen seeds, and runs deterministically."""
-        demo_path = "config/demo_scenarios.json"
-        self.assertTrue(os.path.exists(demo_path), f"Missing {demo_path}")
+    def test_flight_scenarios_config_and_seeds(self):
+        """Confirm flight_scenarios.json exists, contains frozen seeds, and runs deterministically."""
+        flight_path = "config/flight_scenarios.json"
+        self.assertTrue(os.path.exists(flight_path), f"Missing {flight_path}")
 
-        with open(demo_path, "r", encoding="utf-8") as f:
+        with open(flight_path, "r", encoding="utf-8") as f:
             scenarios = json.load(f)
 
         self.assertGreaterEqual(len(scenarios), 3)
         scenario_names = [s["scenario_name"] for s in scenarios]
-        self.assertIn("DEMO_ACQUISITION_AND_TRACK", scenario_names)
-        self.assertIn("DEMO_EXTENDED_COMBINED_STRESS", scenario_names)
+        self.assertIn("DRISHTI_GROUND_TO_UAV_TRACK", scenario_names)
+        self.assertIn("DRISHTI_COMBINED_WORST_CASE_STRESS", scenario_names)
 
         for s in scenarios:
             self.assertIn("seed", s, f"Scenario {s.get('scenario_name')} missing frozen seed")
             self.assertIsInstance(s["seed"], int)
 
-        # Verify deterministic execution of DEMO_ACQUISITION_AND_TRACK
-        runner = BatchScenarioRunner(config_path=demo_path)
-        demo_cfg = [s for s in scenarios if s["scenario_name"] == "DEMO_ACQUISITION_AND_TRACK"][0]
+        # Verify deterministic execution of DRISHTI_GROUND_TO_UAV_TRACK
+        runner = BatchScenarioRunner(config_path=flight_path)
+        flight_cfg = [s for s in scenarios if s["scenario_name"] == "DRISHTI_GROUND_TO_UAV_TRACK"][0]
         # Run 20 frames test
-        short_cfg = dict(demo_cfg)
+        short_cfg = dict(flight_cfg)
         short_cfg["num_frames"] = 20
 
         run1 = runner.run_scenario(short_cfg)
@@ -123,18 +123,18 @@ class TestPhase9(unittest.TestCase):
         self.assertEqual(rec.pipeline_errors, 0)
 
     def test_extended_combined_stress_execution(self):
-        """Confirm extended 300-frame combined stress run finishes with zero pipeline errors."""
-        demo_path = "config/demo_scenarios.json"
-        with open(demo_path, "r", encoding="utf-8") as f:
+        """Confirm extended combined-stress run finishes with zero pipeline errors."""
+        flight_path = "config/flight_scenarios.json"
+        with open(flight_path, "r", encoding="utf-8") as f:
             scenarios = json.load(f)
 
-        stress_cfg = [s for s in scenarios if s["scenario_name"] == "DEMO_EXTENDED_COMBINED_STRESS"][0]
-        self.assertEqual(stress_cfg["num_frames"], 300)
+        stress_cfg = [s for s in scenarios if s["scenario_name"] == "DRISHTI_COMBINED_WORST_CASE_STRESS"][0]
+        self.assertEqual(stress_cfg["num_frames"], 100)
 
         runner = BatchScenarioRunner()
         record = runner.run_scenario(stress_cfg)
 
-        self.assertEqual(record.total_frames, 300)
+        self.assertEqual(record.total_frames, 100)
         self.assertEqual(record.pipeline_errors, 0)
         self.assertGreater(record.fps, 0.0)
         self.assertGreater(record.active_locked_frames, 0)

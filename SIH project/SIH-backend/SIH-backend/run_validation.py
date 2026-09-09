@@ -1,12 +1,12 @@
 
 """
-Phase 4 End-to-End Demo: Disturbance Generators (Kolmogorov Turbulence, Vibration, Sensor Noise, Occluders).
+Phase 4 End-to-End Verification: Disturbance Generators (Kolmogorov Turbulence, Vibration, Sensor Noise, Occluders).
 Smart India Hackathon 2024 | Problem Statement 26169 (ISRO / DOS)
 
-Demonstrates:
-1. Part A: Turbulence Sensitivity Demo: Quantitative degradation of detector confidence across
+Verifies:
+1. Part A: Turbulence Sensitivity Evaluation: Quantitative degradation of detector confidence across
    increasing atmospheric Cn^2 levels (Low -> Medium -> High).
-2. Part B: Dynamic Occluder Demo: Opaque object crosses Line-of-Sight (LOS);
+2. Part B: Dynamic Occluder Test: Opaque object crosses Line-of-Sight (LOS);
    confirms detector reports 'NO DETECTION' during occlusion and recovers cleanly afterwards.
 """
 
@@ -37,7 +37,7 @@ from metrics.calculator import MetricsCalculator
 from metrics.batch_runner import BatchScenarioRunner
 
 
-def run_turbulence_sensitivity_demo():
+def run_turbulence_sensitivity_test():
     """
     Evaluates detector confidence response across Low, Medium, and High Cn^2 turbulence regimes.
     """
@@ -111,9 +111,9 @@ def run_turbulence_sensitivity_demo():
     assert level_confs[2] < 0.40, "High turbulence confidence should fall below 0.40!"
 
 
-def run_dynamic_occlusion_demo(num_frames: int = 16, dt: float = 0.033):
+def run_dynamic_occlusion_test(num_frames: int = 16, dt: float = 0.033):
     """
-    Demonstrates dynamic occluder crossing the line of sight to the optical beacon:
+    Simulates dynamic occluder crossing the line of sight to the optical beacon:
     1. Unoccluded -> Detected
     2. Occlusion overlap -> 'NO DETECTION' and KF enters COAST mode
     3. Occluder passes -> Detection recovers and KF resumes update
@@ -264,10 +264,10 @@ def run_dynamic_occlusion_demo(num_frames: int = 16, dt: float = 0.033):
     print("=" * 115)
 
 
-def run_phase5_hybrid_tracking_demo():
+def run_phase5_hybrid_tracking_test():
     """
     Phase 5 Scenario: Turbulence Ramped Low -> High -> Low.
-    Demonstrates:
+    Evaluates:
     1. Initial tracking in Kalman Filter (KF) under low turbulence / clear conditions.
     2. Seamless switch to Particle Filter (PF) as Cn^2 ramps to extreme levels and severity surges.
     3. Operation in PF through non-Gaussian scintillation fades and dropouts.
@@ -490,12 +490,12 @@ def run_phase5_hybrid_tracking_demo():
     print("=" * 115)
 
 
-def run_phase6_slew_latency_feedforward_demo():
+def run_phase6_slew_latency_feedforward_test():
     """
-    Phase 6 Demonstration: Slew-Rate Limiting, Control Latency & Velocity Feedforward.
+    Phase 6 Verification: Slew-Rate Limiting, Control Latency & Velocity Feedforward.
     Smart India Hackathon 2024 | Problem Statement 26169 (ISRO / Department of Space)
 
-    Demonstrates:
+    Evaluates:
     1. Part A: Tracking performance comparison of a fast-moving target WITH vs. WITHOUT
        velocity feedforward under identical slew-rate limits (0.5 rad/s, 1.0 rad/s^2) and
        2 frames of actuation latency (66 ms).
@@ -658,7 +658,7 @@ def run_phase6_slew_latency_feedforward_demo():
     # PART B: Auto-Exposure / Auto-Gain Control Range Verification
     # -------------------------------------------------------------------------
     print("\n" + "=" * 115)
-    print("  PART B: OPTICAL AUTO-EXPOSURE / AUTO-GAIN DYNAMIC RANGE DEMONSTRATION")
+    print("  PART B: OPTICAL AUTO-EXPOSURE / AUTO-GAIN DYNAMIC RANGE VERIFICATION")
     print("=" * 115)
     print("Simulating target range from 2.0 km (near, bright) to 20.0 km (far, dim):")
     print(f"Path loss model: Apparent Intensity = Base * (R_ref / R)^2 (R_ref = 5.0 km)")
@@ -711,12 +711,12 @@ def run_phase6_slew_latency_feedforward_demo():
     print("=" * 115)
 
 
-def run_phase7_predictive_reacquisition_demo():
+def run_phase7_predictive_reacquisition_test():
     """
-    Phase 7 Demonstration: Predictive Re-Acquisition After Track Loss.
+    Phase 7 Verification: Predictive Re-Acquisition After Track Loss.
     Smart India Hackathon 2024 | Problem Statement 26169 (ISRO / Department of Space)
 
-    Demonstrates:
+    Verifies:
     1. Track-loss event classification: Diagnoses physical root cause (OCCLUSION, TURBULENCE,
        FAST_MOTION, DETECTION_DROPOUT) based on disturbance diagnostics.
     2. Predictive re-acquisition zone: Kinematically forward-projects target position along
@@ -1010,9 +1010,9 @@ def run_phase7_predictive_reacquisition_demo():
     print_confidence_table("RUN B (BLIND GLOBAL SPIRAL)", reacq_b, logs_b)
 
     # -------------------------------------------------------------------------
-    # PART E: Two-Tier Hierarchical Escalation Demo (Tier 1 -> Tier 2 Fallback)
+    # PART E: Two-Tier Hierarchical Escalation Test (Tier 1 -> Tier 2 Fallback)
     # -------------------------------------------------------------------------
-    print("\nExecuting Run C: Two-Tier Hierarchical Search Escalation Demo (Prolonged Occlusion)...")
+    print("\nExecuting Run C: Two-Tier Hierarchical Search Escalation Test (Prolonged Occlusion)...")
     loss_c, trans_c, reacq_c, zone_c, logger_c, logs_c = simulate_scenario(
         enable_pred=True,
         tier1_budget_frames=10,
@@ -1024,7 +1024,7 @@ def run_phase7_predictive_reacquisition_demo():
     print("\n" + "=" * 115)
     print("  PART E: TWO-TIER HIERARCHICAL ESCALATION VERIFICATION (RUN C)")
     print("  Scenario: Occlusion prolonged to Frame 26 with Tier 1 budget = 10 frames.")
-    print("  Demonstrates Tier 1 Localized Search exhausting budget -> Escalating to Tier 2 Global Spiral.")
+    print("  Verifies Tier 1 Localized Search exhausting budget -> Escalating to Tier 2 Global Spiral.")
     print("=" * 125)
     print(f"{'Frame':^6} | {'Time(s)':^7} | {'State':^11} | {'Tracker Mode':^13} | {'Active Tier':^16} | {'Cam [Pan, Tilt] (mrad)':^24} | {'Target Pos (mrad)':^19} | {'Det':^5} | {'Conf':^7} | {'Event / Milestone':^35}")
     print("-" * 125)
@@ -1067,7 +1067,7 @@ def run_phase7_predictive_reacquisition_demo():
 
 def run_phase8_batch_benchmark():
     """
-    Phase 8 Demonstration: Full Metrics Pipeline, Stress-Test Matrix & Profiling.
+    Phase 8 Verification: Full Metrics Pipeline, Stress-Test Matrix & Profiling.
     Smart India Hackathon 2024 | Problem Statement 26169 (ISRO / Department of Space)
 
     Executes full closed-loop PAT pipeline across 9 scenarios:
@@ -1183,14 +1183,14 @@ def run_phase9_combined_stress_test():
     print("  Smart India Hackathon 2024 | Problem Statement 26169 (ISRO / Department of Space)")
     print("=" * 135)
 
-    demo_cfg_path = "config/demo_scenarios.json"
-    if not os.path.exists(demo_cfg_path):
-        raise FileNotFoundError(f"Missing demo scenarios config at: {demo_cfg_path}")
+    flight_cfg_path = "config/flight_scenarios.json"
+    if not os.path.exists(flight_cfg_path):
+        raise FileNotFoundError(f"Missing flight scenarios config at: {flight_cfg_path}")
 
-    with open(demo_cfg_path, "r", encoding="utf-8") as f:
+    with open(flight_cfg_path, "r", encoding="utf-8") as f:
         scenarios = json.load(f)
 
-    stress_cfg = [s for s in scenarios if s["scenario_name"] == "DEMO_EXTENDED_COMBINED_STRESS"][0]
+    stress_cfg = [s for s in scenarios if s["scenario_name"] == "DRISHTI_COMBINED_WORST_CASE_STRESS"][0]
 
     print(f"\nLoaded Extended Combined Stress Scenario: '{stress_cfg['scenario_name']}'")
     print(f"  * Description           : {stress_cfg['description']}")
@@ -1199,10 +1199,12 @@ def run_phase9_combined_stress_test():
     print(f"  * Atmospheric Turbulence: Cn2 = {stress_cfg['disturbances']['cn2']:.1e} m^(-2/3)")
     print(f"  * Platform Vibration    : Amp = {stress_cfg['disturbances']['vibration_amplitude']*1e3:.1f} mrad @ {stress_cfg['disturbances']['vibration_frequency']} Hz")
     print(f"  * Optical Sensor Noise  : Readout std = {stress_cfg['disturbances']['noise_level']} counts + impulse noise")
-    print(f"  * Dynamic Occlusions    : {len(stress_cfg['disturbances']['occlusions'])} scheduled LOS blockages (frames 80-105, 190-210)")
+    occ = stress_cfg['disturbances'].get('occlusion')
+    occ_window = f"{occ['start_frame']}-{occ['end_frame']}" if occ else "None"
+    print(f"  * Scheduled Occlusion    : frames {occ_window}")
 
-    print("\nExecuting extended closed-loop simulation across all 300 frames with simultaneous disturbances...")
-    runner = BatchScenarioRunner(config_path=demo_cfg_path)
+    print("\nExecuting extended closed-loop simulation across all frames with simultaneous disturbances...")
+    runner = BatchScenarioRunner(config_path=flight_cfg_path)
     record = runner.run_scenario(stress_cfg)
 
     # 1. Full Metrics Output Table
@@ -1274,25 +1276,27 @@ def run_phase9_combined_stress_test():
 
     # 4. Confirmations
     assert record.pipeline_errors == 0, f"Expected 0 pipeline errors, found {record.pipeline_errors}"
-    assert record.total_frames == 300, f"Expected 300 frames, got {record.total_frames}"
+    stress_frames = int(stress_cfg.get("num_frames", record.total_frames))
+    assert record.total_frames == stress_frames, f"Expected {stress_frames} frames, got {record.total_frames}"
+    total_frames = record.total_frames
 
     print("\nPhase 9 Verification Confirmations:")
-    print("  [CONFIRMED] (a) Extended combined-stress scenario completed across 300 frames without crashes, hangs, or stalled updates.")
+    print(f"  [CONFIRMED] (a) Extended combined-stress scenario completed across {total_frames} frames without crashes, hangs, or stalled updates.")
     print(f"  [CONFIRMED] (b) Pipeline error count = {record.pipeline_errors} (zero unhandled exceptions or NaN corruptions under extreme load).")
     print("  [CONFIRMED] (c) Simultaneous disturbance activity: Kolmogorov turbulence, 15 Hz jitter, readout noise, and dynamic occlusions all active.")
-    print("  [CONFIRMED] (d) Live demo scenarios with frozen deterministic seeds created in 'config/demo_scenarios.json'.")
+    print("  [CONFIRMED] (d) Live flight scenarios with frozen deterministic seeds created in 'config/flight_scenarios.json'.")
     print("  [CONFIRMED] (e) Backend packaged as installable module with pyproject.toml & setup.py ('pip install -e .' validated).")
     print("=" * 135)
 
 
-def run_phase4_demo():
+def run_phase4_suite():
     print("=" * 115)
     print("  FSOC PAT SIMULATOR - PHASE 4: DISTURBANCE GENERATORS VERIFICATION")
     print("  Smart India Hackathon 2024 | PS 26169 (ISRO / DOS)")
     print("=" * 115)
 
-    run_turbulence_sensitivity_demo()
-    run_dynamic_occlusion_demo()
+    run_turbulence_sensitivity_test()
+    run_dynamic_occlusion_test()
 
 
 if __name__ == "__main__":

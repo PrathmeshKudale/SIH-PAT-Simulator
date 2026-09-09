@@ -98,7 +98,7 @@ Exportable quantitative benchmark record for reporting and dashboards.
 
 4. **Run the Extended Combined-Stress Benchmark**:
    ```bash
-   python run_demo.py
+   python run_validation.py
    ```
 
 ---
@@ -118,7 +118,7 @@ Open `http://127.0.0.1:8787` in a browser. The console provides:
 - live estimator, supervisor, confidence, severity, link, and pipeline status;
 - acquisition time, lock retention, average/peak error, and nominal FPS cards;
 - error and signal-quality traces;
-- scenario switching across the checked-in demo profiles;
+- scenario switching across the checked-in flight profiles;
 - event timeline and disturbance profile cards;
 - JSON/CSV telemetry export and an opt-in scenario benchmark action.
 

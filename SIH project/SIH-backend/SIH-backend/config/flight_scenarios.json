@@ -1,0 +1,250 @@
+[
+  {
+    "scenario_name": "DRISHTI_GROUND_TO_UAV_TRACK",
+    "category": "flight_mission",
+    "seed": 101,
+    "description": "Ground optical terminal tracking an aerial UAV node under nominal atmospheric turbulence (Cn2 = 1e-15, 5.0 km link distance).",
+    "num_frames": 100,
+    "dt": 0.033,
+    "target": {
+      "initial_pos": [0.008, 0.004],
+      "velocity": [0.0025, 0.0012],
+      "base_intensity": 220.0,
+      "distance_km": 5.0
+    },
+    "disturbances": {
+      "cn2": 1.0e-15,
+      "vibration_amplitude": 0.0001,
+      "vibration_frequency": 10.0,
+      "noise_level": 2.0,
+      "occlusion": null
+    },
+    "control": {
+      "kp": 0.35,
+      "ki": 0.0,
+      "kd": 0.15,
+      "k_ff": 1.0,
+      "latency_frames": 2,
+      "max_velocity": 0.5,
+      "max_acceleration": 1.0
+    },
+    "reacquisition": {
+      "enable_predictive_search": true,
+      "tier1_budget_frames": 25
+    }
+  },
+  {
+    "scenario_name": "DRISHTI_UAV_TO_GROUND_STABILIZATION",
+    "category": "flight_mission",
+    "seed": 202,
+    "description": "UAV camera platform moving with multi-axis airframe vibration (25 Hz harmonic jitter, 0.5 mrad), requiring active gimbal stabilization.",
+    "num_frames": 100,
+    "dt": 0.033,
+    "target": {
+      "initial_pos": [0.006, -0.006],
+      "velocity": [0.0018, 0.0022],
+      "base_intensity": 220.0,
+      "distance_km": 4.5
+    },
+    "disturbances": {
+      "cn2": 1.5e-15,
+      "vibration_amplitude": 0.0005,
+      "vibration_frequency": 25.0,
+      "noise_level": 3.0,
+      "occlusion": null
+    },
+    "control": {
+      "kp": 0.38,
+      "ki": 0.02,
+      "kd": 0.18,
+      "k_ff": 1.0,
+      "latency_frames": 2,
+      "max_velocity": 0.5,
+      "max_acceleration": 1.0
+    },
+    "reacquisition": {
+      "enable_predictive_search": true,
+      "tier1_budget_frames": 25
+    }
+  },
+  {
+    "scenario_name": "DRISHTI_UAV_TO_UAV_HIGH_DYNAMICS",
+    "category": "flight_mission",
+    "seed": 303,
+    "description": "Both optical terminals mobile with high relative angular velocities (5.2 mrad/s) and cross-track heading changes.",
+    "num_frames": 100,
+    "dt": 0.033,
+    "target": {
+      "initial_pos": [0.010, -0.008],
+      "velocity": [0.0045, -0.0035],
+      "base_intensity": 210.0,
+      "distance_km": 3.8
+    },
+    "disturbances": {
+      "cn2": 2.0e-15,
+      "vibration_amplitude": 0.0003,
+      "vibration_frequency": 18.0,
+      "noise_level": 3.5,
+      "occlusion": null
+    },
+    "control": {
+      "kp": 0.42,
+      "ki": 0.01,
+      "kd": 0.20,
+      "k_ff": 1.0,
+      "latency_frames": 2,
+      "max_velocity": 0.6,
+      "max_acceleration": 1.2
+    },
+    "reacquisition": {
+      "enable_predictive_search": true,
+      "tier1_budget_frames": 25
+    }
+  },
+  {
+    "scenario_name": "DRISHTI_GROUND_TO_LEO_PASS",
+    "category": "orbital_mission",
+    "seed": 404,
+    "description": "High apparent angular rate space-to-ground coarse pass with rapid slew rates, narrow camera FOV, and predictive kinematic lead.",
+    "num_frames": 100,
+    "dt": 0.033,
+    "target": {
+      "initial_pos": [-0.012, 0.015],
+      "velocity": [0.0055, -0.0048],
+      "base_intensity": 240.0,
+      "distance_km": 650.0
+    },
+    "disturbances": {
+      "cn2": 8.0e-16,
+      "vibration_amplitude": 0.00015,
+      "vibration_frequency": 12.0,
+      "noise_level": 2.5,
+      "occlusion": null
+    },
+    "control": {
+      "kp": 0.45,
+      "ki": 0.0,
+      "kd": 0.22,
+      "k_ff": 1.1,
+      "latency_frames": 1,
+      "max_velocity": 0.8,
+      "max_acceleration": 1.5
+    },
+    "reacquisition": {
+      "enable_predictive_search": true,
+      "tier1_budget_frames": 25
+    }
+  },
+  {
+    "scenario_name": "DRISHTI_STRONG_TURBULENCE_SCINTILLATION",
+    "category": "stress_profile",
+    "seed": 505,
+    "description": "Severe boundary-layer atmospheric turbulence (Cn2 = 4.5e-14) inducing high beam wander, intensity scintillation fading, and centroid jitter.",
+    "num_frames": 100,
+    "dt": 0.033,
+    "target": {
+      "initial_pos": [0.005, -0.004],
+      "velocity": [0.002, 0.001],
+      "base_intensity": 190.0,
+      "distance_km": 7.0
+    },
+    "disturbances": {
+      "cn2": 4.5e-14,
+      "vibration_amplitude": 0.0004,
+      "vibration_frequency": 15.0,
+      "noise_level": 6.5,
+      "occlusion": null
+    },
+    "control": {
+      "kp": 0.32,
+      "ki": 0.0,
+      "kd": 0.14,
+      "k_ff": 0.9,
+      "latency_frames": 2,
+      "max_velocity": 0.5,
+      "max_acceleration": 1.0
+    },
+    "reacquisition": {
+      "enable_predictive_search": true,
+      "tier1_budget_frames": 30
+    }
+  },
+  {
+    "scenario_name": "DRISHTI_TEMPORARY_OCCLUSION_REACQUISITION",
+    "category": "recovery_mission",
+    "seed": 606,
+    "description": "Complete line-of-sight obstruction for 14 frames from dynamic cloud/obstacle plume, testing Kalman kinematic coast and Tier-1 spiral reacquisition.",
+    "num_frames": 100,
+    "dt": 0.033,
+    "target": {
+      "initial_pos": [0.011, -0.005],
+      "velocity": [0.0035, -0.002],
+      "base_intensity": 220.0,
+      "distance_km": 5.0
+    },
+    "disturbances": {
+      "cn2": 1.0e-15,
+      "vibration_amplitude": 0.0002,
+      "vibration_frequency": 10.0,
+      "noise_level": 3.0,
+      "occlusion": {
+        "start_frame": 28,
+        "end_frame": 42,
+        "radius_rad": 0.009,
+        "opacity": 1.0
+      }
+    },
+    "control": {
+      "kp": 0.35,
+      "ki": 0.0,
+      "kd": 0.15,
+      "k_ff": 1.0,
+      "latency_frames": 2,
+      "max_velocity": 0.5,
+      "max_acceleration": 1.0
+    },
+    "reacquisition": {
+      "enable_predictive_search": true,
+      "tier1_budget_frames": 25
+    }
+  },
+  {
+    "scenario_name": "DRISHTI_COMBINED_WORST_CASE_STRESS",
+    "category": "stress_profile",
+    "seed": 707,
+    "description": "Adversarial worst-case stress: fast target maneuvering combined with 30 Hz platform vibration, elevated turbulence (Cn2 = 2.5e-14), and sensor latency.",
+    "num_frames": 100,
+    "dt": 0.033,
+    "target": {
+      "initial_pos": [0.012, 0.008],
+      "velocity": [0.0048, -0.0042],
+      "base_intensity": 180.0,
+      "distance_km": 6.2
+    },
+    "disturbances": {
+      "cn2": 2.5e-14,
+      "vibration_amplitude": 0.0007,
+      "vibration_frequency": 30.0,
+      "noise_level": 7.0,
+      "occlusion": {
+        "start_frame": 35,
+        "end_frame": 45,
+        "radius_rad": 0.008,
+        "opacity": 0.85
+      }
+    },
+    "control": {
+      "kp": 0.36,
+      "ki": 0.02,
+      "kd": 0.16,
+      "k_ff": 1.0,
+      "latency_frames": 3,
+      "max_velocity": 0.5,
+      "max_acceleration": 1.0
+    },
+    "reacquisition": {
+      "enable_predictive_search": true,
+      "tier1_budget_frames": 25
+    }
+  }
+]

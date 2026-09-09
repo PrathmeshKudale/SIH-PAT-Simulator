@@ -10,7 +10,7 @@ of the closed-loop PAT pipeline:
 - Live Telemetry Sidebar: Tracker mode (KF/PF/COAST), supervisor state
   (TRACKING/SEARCHING/REACQUIRED), confidence and severity meters, tracking error,
   and a scrolling real-time event log.
-- Bottom Controls: Scenario selector (from config/demo_scenarios.json),
+- Bottom Controls: Scenario selector (from config/flight_scenarios.json),
   Play/Pause, Step-Frame, Reset, and adjustable simulation speed.
 """
 
@@ -271,11 +271,47 @@ class SimulationSession:
             "active_occluder": occ_info,
             "reacq_zone": self.computed_zone if self.state == "SEARCHING" else None,
             "event_message": event_msg,
+            "detector_pixel": (float(det.x), float(det.y)) if det is not None else None,
+            "ground_truth_pixel": (float(frame.ground_truth_target_pos[0]), float(frame.ground_truth_target_pos[1])) if getattr(frame, "ground_truth_target_pos", None) is not None else None,
+            "estimated_pos": (float(est.x), float(est.y)) if est is not None else None,
+            "control_command": (float(c_p), float(c_t)),
+            "sensor_resolution": list(cam_state.resolution),
+            "range_km": float(self.dist_km),
         }
 
         self.frame_id += 1
         self.sim_time += dt
         return telemetry
+
+    def inject_disturbance(self, disturbance_type: str, value: Any = None) -> str:
+        """Dynamically inject or modify disturbance parameters during live simulation."""
+        if disturbance_type == "occlusion":
+            radius = float(value.get("radius_rad", 0.010)) if isinstance(value, dict) else 0.010
+            duration = int(value.get("duration_frames", 20)) if isinstance(value, dict) else 20
+            occ = DynamicOccluder(
+                initial_pos=(self.target.x, self.target.y),
+                velocity=self.vel,
+                radius_rad=radius,
+                opacity=1.0,
+            )
+            self.scheduled_occluders.append((self.frame_id, self.frame_id + duration, occ))
+            return f"Injected dynamic occlusion at frame {self.frame_id} for {duration} frames"
+        elif disturbance_type == "turbulence":
+            new_cn2 = float(value) if value is not None else (self.cn2 * 10.0 if self.cn2 > 0 else 2.0e-14)
+            self.cn2 = new_cn2
+            self.env.turbulence = KolmogorovTurbulence(cn2=self.cn2, seed=self.seed)
+            return f"Turbulence Cn2 updated to {self.cn2:.1e}"
+        elif disturbance_type == "vibration":
+            new_amp = float(value) if value is not None else (self.vib_amp * 2.5 if self.vib_amp > 0 else 0.0008)
+            self.vib_amp = new_amp
+            self.env.vibration = PlatformVibration(amplitude_rad=self.vib_amp, frequency_hz=self.vib_freq, seed=self.seed)
+            return f"Platform vibration amplitude updated to {self.vib_amp*1e3:.2f} mrad"
+        elif disturbance_type == "noise":
+            new_std = float(value) if value is not None else (self.noise_std + 3.0)
+            self.noise_std = new_std
+            self.env.sensor_noise = SensorNoise(gaussian_std=self.noise_std, seed=self.seed)
+            return f"Sensor noise updated to sigma={self.noise_std:.1f}"
+        return f"Unknown disturbance: {disturbance_type}"
 
 
 class VisualSimulatorUI:
@@ -313,10 +349,10 @@ class VisualSimulatorUI:
         self.select_scenario(0)
 
     def load_scenarios(self) -> List[Dict[str, Any]]:
-        """Load demo scenarios from config file."""
-        path = "config/demo_scenarios.json"
+        """Load flight scenarios from config file."""
+        path = "config/flight_scenarios.json"
         if not os.path.exists(path):
-            path = "configs/demo_scenarios.json"
+            path = "configs/flight_scenarios.json"
         if os.path.exists(path):
             with open(path, "r", encoding="utf-8") as f:
                 return json.load(f)
