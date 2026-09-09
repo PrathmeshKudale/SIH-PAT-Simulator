@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fsoc-pat-simulator"
+version = "1.0.0"
+description = "Free-Space Optical Communication (FSOC) Coarse Pointing-Acquisition-Tracking (PAT) Simulator"
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [
+    { name = "SIH 2024 PS-26169 Team (ISRO / DOS)" }
+]
+dependencies = [
+    "numpy>=1.22.0",
+    "scipy>=1.8.0",
+    "opencv-python>=4.5.0",
+]
+
+[tool.setuptools]
+py-modules = ["contracts"]
+packages = [
+    "sim",
+    "detect",
+    "track",
+    "control",
+    "disturb",
+    "metrics",
+]

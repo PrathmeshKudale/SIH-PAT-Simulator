@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#111713" />
+    <meta name="description" content="AERIS coarse pointing, acquisition and tracking ground terminal console." />
+    <title>AERIS / PAT Ground Terminal</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand-lockup">
+          <div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></div>
+          <div>
+            <div class="eyebrow">AERIS / GROUND TERMINAL • PS 26169</div>
+            <div class="brand-name">AERIS <span>PAT console</span></div>
+          </div>
+        </div>
+        <div class="topbar-center">
+          <div class="status-pill"><i class="status-dot"></i><span id="connectionLabel">CONNECTING</span></div>
+          <span class="topbar-divider"></span>
+          <span class="topbar-context">LOCAL TEST ARTICLE / COARSE PAT LOOP</span>
+        </div>
+        <div class="topbar-actions">
+          <button class="icon-button" id="themeButton" title="Toggle contrast mode" aria-label="Toggle contrast mode">◐</button>
+          <div class="operator-chip"><span class="avatar">P</span><span>Prathmesh</span><span class="chevron">⌄</span></div>
+        </div>
+      </header>
+
+      <div class="workspace">
+        <aside class="rail" aria-label="Primary navigation">
+          <button class="rail-item active" data-view="live" title="Live telemetry"><span class="rail-icon">⌁</span><span>Live</span></button>
+          <button class="rail-item" data-view="scenarios" title="Test scenarios"><span class="rail-icon">▦</span><span>Tests</span></button>
+          <button class="rail-item" data-view="benchmarks" title="Benchmarks"><span class="rail-icon">↗</span><span>Runs</span></button>
+          <div class="rail-spacer"></div>
+          <div class="rail-build">v1.0<br /><span>LOCAL</span></div>
+        </aside>
+
+        <main class="main-content">
+          <section class="page-head">
+            <div>
+              <div class="breadcrumb"><span>OPERATIONS</span><b>/</b><span class="muted">PAT TELEMETRY</span></div>
+              <h1>Coarse PAT telemetry</h1>
+              <p>Ground-terminal view of the camera line-of-sight, estimator state, and control response.</p>
+            </div>
+            <div class="head-actions">
+              <button class="button button-ghost" id="exportJsonButton"><span>↓</span> JSON log</button>
+              <button class="button button-ghost" id="exportCsvButton"><span>↓</span> CSV log</button>
+              <button class="button button-accent" id="benchmarkButton"><span>◈</span> Execute run</button>
+            </div>
+          </section>
+
+          <section class="mission-strip panel">
+            <div class="scenario-select-wrap">
+              <label for="scenarioSelect">ACTIVE SCENARIO</label>
+              <div class="select-shell"><select id="scenarioSelect"></select><span>⌄</span></div>
+            </div>
+            <div class="strip-separator"></div>
+            <div class="mission-summary">
+              <span class="summary-label">MISSION PROFILE</span>
+              <strong id="scenarioDescription">Loading scenario telemetry…</strong>
+            </div>
+            <div class="strip-actions">
+              <button class="button button-dark" id="resetButton">↺ Reset</button>
+              <button class="button button-primary" id="playButton">▶ Start mission</button>
+            </div>
+          </section>
+
+          <section class="telemetry-grid" id="liveView">
+            <div class="panel theater-panel">
+              <div class="panel-heading">
+                <div>
+                  <div class="panel-kicker"><span class="live-pulse"></span> LIVE LINE-OF-SIGHT</div>
+                  <h2>Camera / target geometry</h2>
+                </div>
+                <div class="theater-tools"><span id="frameReadout">FRAME 000 / 000</span><span class="tool-divider"></span><span id="simTimeReadout">T+00.000</span></div>
+              </div>
+              <div class="theater-stage" id="theaterStage">
+                <div class="stage-overlay stage-top-left"><span class="crosshair-symbol">⊕</span><span>AZ / EL TRACKING VIEW</span></div>
+                <div class="stage-overlay stage-top-right"><span id="fovReadout">FOV 40 × 30 mrad</span><span class="stage-mode" id="stageMode">KF / NOMINAL</span></div>
+                <div class="scene-depth-frame">
+                  <div class="scene-depth-glow"></div>
+                  <svg id="trackingSvg" class="tracking-svg" viewBox="0 0 900 520" preserveAspectRatio="none" role="img" aria-label="Live three-dimensional virtual camera tracking theater">
+                    <defs>
+                      <linearGradient id="spaceGradient" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#141b16" /><stop offset="0.45" stop-color="#17221a" /><stop offset="1" stop-color="#101611" /></linearGradient>
+                      <linearGradient id="frustumGradient" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#79b9aa" stop-opacity=".01" /><stop offset=".55" stop-color="#79b9aa" stop-opacity=".07" /><stop offset="1" stop-color="#b7c77e" stop-opacity=".01" /></linearGradient>
+                      <linearGradient id="terminalFace" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#d4dfbf" /><stop offset=".32" stop-color="#9daE7d" /><stop offset="1" stop-color="#51664e" /></linearGradient>
+                      <linearGradient id="terminalSide" x1="0" x2="1"><stop offset="0" stop-color="#596b52" /><stop offset="1" stop-color="#26352a" /></linearGradient>
+                      <linearGradient id="gimbalMetal" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#b2b9a7" /><stop offset=".38" stop-color="#626c61" /><stop offset="1" stop-color="#252e28" /></linearGradient>
+                      <radialGradient id="lensGlow"><stop offset="0" stop-color="#edf1dc" /><stop offset=".2" stop-color="#9fc7b1" stop-opacity=".9" /><stop offset=".58" stop-color="#557f70" stop-opacity=".35" /><stop offset="1" stop-color="#557f70" stop-opacity="0" /></radialGradient>
+                      <radialGradient id="targetGlow"><stop offset="0" stop-color="#f0f4d8" stop-opacity=".9" /><stop offset=".2" stop-color="#c3d38a" stop-opacity=".76" /><stop offset=".6" stop-color="#8b9e55" stop-opacity=".18" /><stop offset="1" stop-color="#8b9e55" stop-opacity="0" /></radialGradient>
+                      <filter id="softGlow"><feGaussianBlur stdDeviation="4" /></filter>
+                      <filter id="wideGlow"><feGaussianBlur stdDeviation="11" /></filter>
+                      <pattern id="minorGrid" width="45" height="45" patternUnits="userSpaceOnUse"><path d="M 45 0 L 0 0 0 45" fill="none" stroke="#43544a" stroke-width="1" stroke-opacity=".24" /></pattern>
+                      <pattern id="majorGrid" width="180" height="180" patternUnits="userSpaceOnUse"><rect width="180" height="180" fill="url(#minorGrid)" /><path d="M 180 0 L 0 0 0 180" fill="none" stroke="#647666" stroke-width="1" stroke-opacity=".3" /></pattern>
+                    </defs>
+                    <rect width="900" height="520" fill="url(#spaceGradient)" />
+                    <rect width="900" height="520" fill="url(#majorGrid)" opacity=".28" />
+                    <g id="starLayer"></g>
+                    <g id="depthGridLayer"></g>
+                    <g id="trajectoryLayer"></g>
+                    <g id="frustumLayer"></g>
+                    <g id="reacqLayer"></g>
+                    <g id="fovLayer"></g>
+                    <g id="cameraBodyLayer"></g>
+                    <g id="targetBodyLayer"></g>
+                    <g id="targetLayer"></g>
+                    <g id="boresightLayer"></g>
+                    <g id="annotationLayer"></g>
+                  </svg>
+                  <div class="scene-depth-label depth-label-left">ELEVATION / mrad</div>
+                  <div class="scene-depth-label depth-label-right">TARGET RANGE · <span id="rangeReadout">05.0 KM</span></div>
+                  <div class="scene-scanline"></div>
+                </div>
+                <div class="stage-bottom-left"><span class="legend-key green"></span> TARGET <span class="legend-key cyan"></span> FOV / BORESIGHT <span class="legend-key amber"></span> REACQ WINDOW</div>
+                <div class="stage-bottom-right" id="stageCoordinates">PAN +0.00 / TILT +0.00 mrad</div>
+              </div>
+              <div class="theater-footer">
+                <div class="signal-readout"><span class="signal-bars"><i></i><i></i><i></i><i></i></span><span>OPTICAL LINK</span><strong id="linkState">LOCKED</strong></div>
+                <div class="footer-note" id="eventBanner">System ready. Start the mission to stream live telemetry.</div>
+                <div class="latency-readout"><span>PIPELINE</span><strong id="processingReadout">— ms</strong></div>
+              </div>
+            </div>
+
+            <aside class="panel command-panel">
+              <div class="panel-heading compact">
+                <div><div class="panel-kicker">ESTIMATOR / CONTROL</div><h2>Loop status</h2></div>
+                <span class="status-badge nominal" id="supervisorBadge">STANDBY</span>
+              </div>
+              <div class="command-hero">
+                <div class="hero-label">ESTIMATOR</div>
+                <div class="hero-value" id="trackerMode">KF</div>
+                <div class="hero-sub" id="trackerSub">Kalman filter / active lock</div>
+              </div>
+              <div class="command-rows">
+                <div class="command-row"><span>Supervisor state</span><strong id="supervisorState">STANDBY</strong></div>
+                <div class="command-row"><span>Detection confidence</span><strong id="confidenceValue">—</strong></div>
+                <div class="command-row"><span>Disturbance severity</span><strong id="severityValue">—</strong></div>
+                <div class="command-row"><span>Target in camera FOV</span><strong id="fovState">—</strong></div>
+              </div>
+              <div class="meter-block"><div class="meter-label"><span>CONFIDENCE</span><strong id="confidenceMeterLabel">0%</strong></div><div class="meter-track"><span id="confidenceMeter"></span></div></div>
+              <div class="meter-block"><div class="meter-label"><span>SEVERITY</span><strong id="severityMeterLabel">0%</strong></div><div class="meter-track severity"><span id="severityMeter"></span></div></div>
+              <div class="disturbance-card"><div class="disturbance-card-head"><span>ENVIRONMENT / SENSOR MODEL</span><span class="mini-live">LIVE</span></div><div class="disturbance-chips" id="disturbanceChips"></div></div>
+              <div class="command-footer"><span>CONTROL AUTHORITY</span><strong>ADAPTIVE / PID + FF</strong></div>
+            </aside>
+          </section>
+
+          <section class="kpi-row">
+            <div class="metric-card"><div class="metric-label">ACQUISITION TIME <span class="metric-info">i</span></div><div class="metric-value" id="acquisitionMetric">—</div><div class="metric-foot">time to first valid lock</div></div>
+            <div class="metric-card"><div class="metric-label">LOCK RETENTION <span class="metric-info">i</span></div><div class="metric-value lime" id="retentionMetric">—</div><div class="metric-foot" id="retentionFoot">active estimator frames</div></div>
+            <div class="metric-card"><div class="metric-label">AVG. TRACKING ERROR <span class="metric-info">i</span></div><div class="metric-value" id="avgErrorMetric">—</div><div class="metric-foot">radial error / mrad</div></div>
+            <div class="metric-card"><div class="metric-label">PEAK TRACKING ERROR <span class="metric-info">i</span></div><div class="metric-value amber" id="maxErrorMetric">—</div><div class="metric-foot">worst observed excursion</div></div>
+            <div class="metric-card"><div class="metric-label">PIPELINE RATE <span class="metric-info">i</span></div><div class="metric-value" id="fpsMetric">—</div><div class="metric-foot">nominal simulation cadence</div></div>
+          </section>
+
+          <section class="analysis-grid">
+            <div class="panel chart-panel"><div class="chart-heading"><div><div class="panel-kicker">CONTROL RESPONSE</div><h2>Pointing error</h2></div><div class="chart-legend"><span><i class="legend-line cyan-line"></i> error</span><span><i class="legend-line threshold-line"></i> lock threshold</span></div></div><div class="chart-wrap"><canvas id="errorChart"></canvas><div class="chart-axis-label y-label">mrad</div><div class="chart-axis-label x-label">simulation time →</div><div class="empty-chart" id="errorEmpty">Run the mission to populate the trace.</div></div></div>
+            <div class="panel chart-panel"><div class="chart-heading"><div><div class="panel-kicker">TRACK QUALITY</div><h2>Confidence / severity</h2></div><div class="chart-legend"><span><i class="legend-line green-line"></i> confidence</span><span><i class="legend-line amber-line"></i> severity</span></div></div><div class="chart-wrap"><canvas id="qualityChart"></canvas><div class="chart-axis-label y-label">0 — 1</div><div class="chart-axis-label x-label">simulation time →</div><div class="empty-chart" id="qualityEmpty">Signal quality appears here in real time.</div></div></div>
+          </section>
+
+          <section class="bottom-grid">
+            <div class="panel event-panel"><div class="chart-heading"><div><div class="panel-kicker">RUN LOG</div><h2>Events</h2></div><span class="event-count" id="eventCount">0 events</span></div><div class="event-list" id="eventList"><div class="empty-state">No events yet. Telemetry events will appear here.</div></div></div>
+            <div class="panel profile-panel"><div class="chart-heading"><div><div class="panel-kicker">TEST CONFIGURATION</div><h2>Environment model</h2></div><span class="profile-tag" id="profileTag">BASELINE</span></div><div class="profile-list" id="profileList"></div><div class="profile-caption" id="profileCaption">Select a scenario to inspect its stress model.</div></div>
+          </section>
+
+          <footer class="app-footer"><span>AERIS / PAT ground terminal</span><span>Local test article • telemetry remains on this machine</span><span id="footerClock">—</span></footer>
+        </main>
+      </div>
+    </div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="app.js" defer></script>
+  </body>
+</html>

@@ -1,0 +1,20 @@
+# FSOC Coarse PAT Simulator - Dependencies
+# Smart India Hackathon 2024 | Problem Statement 26169 (ISRO / DOS)
+
+# Core numerical, scientific, and vision packages
+numpy>=1.22.0
+scipy>=1.8.0
+opencv-python>=4.5.0
+
+# Packaging & distribution
+setuptools>=61.0.0
+
+# Editable local package install:
+# To install the backend package into your active python environment so you can
+# import contracts, sim, detect, track, control, disturb, metrics from anywhere:
+#   pip install -e .
+#
+# Note for Linux/Ubuntu users:
+# Tkinter (used by verify_ui.py) is bundled with standard Python on Windows and macOS.
+# On Linux, install it via:
+#   sudo apt-get install python3-tk

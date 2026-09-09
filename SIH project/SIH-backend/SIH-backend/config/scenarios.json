@@ -1,0 +1,309 @@
+[
+  {
+    "scenario_name": "CLEAR_BASELINE",
+    "is_held_out": false,
+    "description": "Clear atmosphere (Cn2=1e-16), gentle target motion, baseline optical conditions.",
+    "num_frames": 50,
+    "dt": 0.033,
+    "target": {
+      "initial_pos": [0.008, 0.004],
+      "velocity": [0.002, 0.001],
+      "base_intensity": 220.0,
+      "distance_km": 5.0
+    },
+    "disturbances": {
+      "cn2": 1.0e-16,
+      "vibration_amplitude": 0.0001,
+      "vibration_frequency": 10.0,
+      "noise_level": 2.0,
+      "occlusion": null
+    },
+    "control": {
+      "kp": 0.35,
+      "ki": 0.0,
+      "kd": 0.15,
+      "k_ff": 1.0,
+      "latency_frames": 2,
+      "max_velocity": 0.5,
+      "max_acceleration": 1.0
+    },
+    "reacquisition": {
+      "enable_predictive_search": true,
+      "tier1_budget_frames": 25
+    }
+  },
+  {
+    "scenario_name": "MODERATE_TURBULENCE",
+    "is_held_out": false,
+    "description": "Moderate atmospheric turbulence (Cn2=1e-14) with platform jitter.",
+    "num_frames": 50,
+    "dt": 0.033,
+    "target": {
+      "initial_pos": [0.010, -0.005],
+      "velocity": [0.003, -0.002],
+      "base_intensity": 220.0,
+      "distance_km": 5.0
+    },
+    "disturbances": {
+      "cn2": 1.0e-14,
+      "vibration_amplitude": 0.0003,
+      "vibration_frequency": 10.0,
+      "noise_level": 4.0,
+      "occlusion": null
+    },
+    "control": {
+      "kp": 0.35,
+      "ki": 0.0,
+      "kd": 0.15,
+      "k_ff": 1.0,
+      "latency_frames": 2,
+      "max_velocity": 0.5,
+      "max_acceleration": 1.0
+    },
+    "reacquisition": {
+      "enable_predictive_search": true,
+      "tier1_budget_frames": 25
+    }
+  },
+  {
+    "scenario_name": "SEVERE_TURBULENCE",
+    "is_held_out": false,
+    "description": "High Kolmogorov turbulence (Cn2=5e-13) causing optical fading and centroid wander.",
+    "num_frames": 50,
+    "dt": 0.033,
+    "target": {
+      "initial_pos": [0.008, 0.008],
+      "velocity": [0.002, 0.001],
+      "base_intensity": 220.0,
+      "distance_km": 8.0
+    },
+    "disturbances": {
+      "cn2": 5.0e-13,
+      "vibration_amplitude": 0.0004,
+      "vibration_frequency": 12.0,
+      "noise_level": 6.0,
+      "occlusion": null
+    },
+    "control": {
+      "kp": 0.35,
+      "ki": 0.0,
+      "kd": 0.15,
+      "k_ff": 1.0,
+      "latency_frames": 2,
+      "max_velocity": 0.5,
+      "max_acceleration": 1.0
+    },
+    "reacquisition": {
+      "enable_predictive_search": true,
+      "tier1_budget_frames": 25
+    }
+  },
+  {
+    "scenario_name": "FAST_PLATFORM_VIBRATION",
+    "is_held_out": false,
+    "description": "High-frequency platform jitter (25 Hz, 0.6 mrad) challenging PID damping.",
+    "num_frames": 50,
+    "dt": 0.033,
+    "target": {
+      "initial_pos": [0.006, -0.006],
+      "velocity": [0.002, 0.002],
+      "base_intensity": 220.0,
+      "distance_km": 5.0
+    },
+    "disturbances": {
+      "cn2": 1.0e-15,
+      "vibration_amplitude": 0.0006,
+      "vibration_frequency": 25.0,
+      "noise_level": 4.0,
+      "occlusion": null
+    },
+    "control": {
+      "kp": 0.35,
+      "ki": 0.0,
+      "kd": 0.15,
+      "k_ff": 1.0,
+      "latency_frames": 2,
+      "max_velocity": 0.5,
+      "max_acceleration": 1.0
+    },
+    "reacquisition": {
+      "enable_predictive_search": true,
+      "tier1_budget_frames": 25
+    }
+  },
+  {
+    "scenario_name": "DYNAMIC_OCCLUSION_SHORT",
+    "is_held_out": false,
+    "description": "Dynamic opaque obstacle transits LOS for 10 frames, testing Tier 1 predictive re-acquisition.",
+    "num_frames": 50,
+    "dt": 0.033,
+    "target": {
+      "initial_pos": [0.012, -0.006],
+      "velocity": [0.005, -0.002],
+      "base_intensity": 220.0,
+      "distance_km": 5.0
+    },
+    "disturbances": {
+      "cn2": 1.0e-15,
+      "vibration_amplitude": 0.0002,
+      "vibration_frequency": 10.0,
+      "noise_level": 3.0,
+      "occlusion": {
+        "start_frame": 12,
+        "end_frame": 21,
+        "radius_rad": 0.008,
+        "opacity": 1.0
+      }
+    },
+    "control": {
+      "kp": 0.35,
+      "ki": 0.0,
+      "kd": 0.15,
+      "k_ff": 1.0,
+      "latency_frames": 2,
+      "max_velocity": 0.5,
+      "max_acceleration": 1.0
+    },
+    "reacquisition": {
+      "enable_predictive_search": true,
+      "tier1_budget_frames": 25
+    }
+  },
+  {
+    "scenario_name": "DEEP_RANGE_DIM_TARGET",
+    "is_held_out": false,
+    "description": "Deep space link (18 km distance) with low photon flux, exercising camera auto-exposure.",
+    "num_frames": 50,
+    "dt": 0.033,
+    "target": {
+      "initial_pos": [0.005, 0.005],
+      "velocity": [0.001, 0.001],
+      "base_intensity": 220.0,
+      "distance_km": 18.0
+    },
+    "disturbances": {
+      "cn2": 5.0e-15,
+      "vibration_amplitude": 0.0003,
+      "vibration_frequency": 10.0,
+      "noise_level": 4.0,
+      "occlusion": null
+    },
+    "control": {
+      "kp": 0.35,
+      "ki": 0.0,
+      "kd": 0.15,
+      "k_ff": 1.0,
+      "latency_frames": 2,
+      "max_velocity": 0.5,
+      "max_acceleration": 1.0
+    },
+    "reacquisition": {
+      "enable_predictive_search": true,
+      "tier1_budget_frames": 25
+    }
+  },
+  {
+    "scenario_name": "[HELD-OUT] COMPOUND_STORM",
+    "is_held_out": true,
+    "description": "Severe compound disturbances: high turbulence (Cn2=3e-13), readout noise (std=10), strong vibration (0.8 mrad).",
+    "num_frames": 50,
+    "dt": 0.033,
+    "target": {
+      "initial_pos": [0.015, -0.010],
+      "velocity": [0.004, 0.003],
+      "base_intensity": 220.0,
+      "distance_km": 10.0
+    },
+    "disturbances": {
+      "cn2": 3.0e-13,
+      "vibration_amplitude": 0.0008,
+      "vibration_frequency": 8.0,
+      "noise_level": 10.0,
+      "occlusion": null
+    },
+    "control": {
+      "kp": 0.35,
+      "ki": 0.0,
+      "kd": 0.15,
+      "k_ff": 1.0,
+      "latency_frames": 2,
+      "max_velocity": 0.5,
+      "max_acceleration": 1.0
+    },
+    "reacquisition": {
+      "enable_predictive_search": true,
+      "tier1_budget_frames": 25
+    }
+  },
+  {
+    "scenario_name": "[HELD-OUT] HIGH_SLEW_MANEUVER",
+    "is_held_out": true,
+    "description": "High-speed cross-track maneuver (18 mrad/s) pushing slew-rate limiters under 2-frame control latency.",
+    "num_frames": 50,
+    "dt": 0.033,
+    "target": {
+      "initial_pos": [0.008, 0.004],
+      "velocity": [0.016, -0.008],
+      "base_intensity": 220.0,
+      "distance_km": 4.0
+    },
+    "disturbances": {
+      "cn2": 1.0e-15,
+      "vibration_amplitude": 0.0002,
+      "vibration_frequency": 10.0,
+      "noise_level": 3.0,
+      "occlusion": null
+    },
+    "control": {
+      "kp": 0.35,
+      "ki": 0.0,
+      "kd": 0.15,
+      "k_ff": 1.0,
+      "latency_frames": 2,
+      "max_velocity": 0.5,
+      "max_acceleration": 1.0
+    },
+    "reacquisition": {
+      "enable_predictive_search": true,
+      "tier1_budget_frames": 25
+    }
+  },
+  {
+    "scenario_name": "[HELD-OUT] LONG_OCCLUSION_WEAK_SIGNAL",
+    "is_held_out": true,
+    "description": "Prolonged occlusion (18 frames) combined with distant weak beacon (15 km), stressing Tier 1 -> Tier 2 escalation.",
+    "num_frames": 55,
+    "dt": 0.033,
+    "target": {
+      "initial_pos": [0.012, -0.008],
+      "velocity": [0.005, -0.002],
+      "base_intensity": 220.0,
+      "distance_km": 15.0
+    },
+    "disturbances": {
+      "cn2": 2.0e-14,
+      "vibration_amplitude": 0.0003,
+      "vibration_frequency": 10.0,
+      "noise_level": 5.0,
+      "occlusion": {
+        "start_frame": 10,
+        "end_frame": 27,
+        "radius_rad": 0.010,
+        "opacity": 1.0
+      }
+    },
+    "control": {
+      "kp": 0.35,
+      "ki": 0.0,
+      "kd": 0.15,
+      "k_ff": 1.0,
+      "latency_frames": 2,
+      "max_velocity": 0.5,
+      "max_acceleration": 1.0
+    },
+    "reacquisition": {
+      "enable_predictive_search": true,
+      "tier1_budget_frames": 10
+    }
+  }
+]

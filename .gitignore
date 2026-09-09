@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+dist/
+build/
+.wheel-staging/
+.validation/
+
+# Node (unrelated projects)
+node_modules/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
