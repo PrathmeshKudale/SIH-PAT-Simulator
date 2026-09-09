@@ -1,0 +1,1 @@
+self.__REACT_LOADABLE_MANIFEST='{"..\\\\node_modules\\\\next\\\\dist\\\\client\\\\index.js -> ../pages/_app":{"id":1966,"files":["static/chunks/966.1775eb621d8d3e09.js"]},"..\\\\node_modules\\\\next\\\\dist\\\\client\\\\index.js -> ../pages/_error":{"id":3899,"files":["static/chunks/899.5ce6b3cbad015b59.js"]}}';
