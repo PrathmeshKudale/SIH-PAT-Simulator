@@ -593,3 +593,31 @@ class BatchScenarioRunner:
             "=" * 105,
         ]
         return "\n".join(lines)
+
+
+def main() -> None:
+    import argparse
+    parser = argparse.ArgumentParser(description="Batch Scenario Runner for FSOC Coarse PAT Simulator")
+    parser.add_argument("--scenarios", type=str, default="config/scenarios.json", help="Path to scenario JSON config file")
+    parser.add_argument("--output-dir", type=str, default="results", help="Output directory for results")
+    parser.add_argument("--hybrid", action="store_true", help="Use hybrid Kalman/Particle filter tracker")
+    args = parser.parse_args()
+
+    runner = BatchScenarioRunner(config_path=args.scenarios, use_hybrid_tracker=args.hybrid)
+    scenarios = runner.load_scenarios()
+    print(f"[*] Loaded {len(scenarios)} scenarios from {args.scenarios}. Executing batch run...")
+    runner.run_all(scenarios)
+
+    os.makedirs(args.output_dir, exist_ok=True)
+    json_path = os.path.join(args.output_dir, "batch_results.json")
+    csv_path = os.path.join(args.output_dir, "batch_results.csv")
+    runner.export_batch_json(json_path)
+    runner.export_batch_csv(csv_path)
+
+    print("\n" + runner.format_results_table())
+    print(f"\n[OK] Batch evaluation complete! Results saved to:\n  - {json_path}\n  - {csv_path}")
+
+
+if __name__ == "__main__":
+    main()
+
