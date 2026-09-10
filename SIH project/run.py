@@ -15,7 +15,7 @@ from pathlib import Path
 
 # Resolve project directories
 ROOT = Path(__file__).resolve().parent
-BACKEND_DIR = ROOT / "SIH-backend" / "SIH-backend"
+BACKEND_DIR = ROOT / "SIH" if (ROOT / "SIH").exists() else (ROOT / "SIH-backend" / "SIH-backend")
 FRONTEND_DIR = ROOT / "frontend"
 
 if str(BACKEND_DIR) not in sys.path:
