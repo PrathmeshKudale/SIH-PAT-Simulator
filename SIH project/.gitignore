@@ -1,3 +1,6 @@
+# Deprecated backend directory (now in SIH/)
+SIH-backend/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
